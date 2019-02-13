@@ -5,7 +5,8 @@ plugins {
 sourceCompatibility = 1.8
 
 dependencies {
-
     compile 'com.googlecode.libphonenumber:libphonenumber:8.10.5'
+
+    implementation 'com.twilio.sdk:twilio:7.35.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
 }
