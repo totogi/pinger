@@ -7,8 +7,26 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "pinger")
 public class PingerSettings {
 
+    private String account;
+    private String authToken;
     private Long checkInterval;
     private Integer checkThreshold;
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
 
     public Long getCheckInterval() {
         return checkInterval;

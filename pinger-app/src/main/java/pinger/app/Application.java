@@ -10,11 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import pinger.app.config.PingerSettings;
-import pinger.core.Pinger;
-import pinger.core.PingerBuilder;
-
-import java.net.URI;
-import java.time.Duration;
+import pinger.core.TwilioPinger;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
@@ -49,6 +45,14 @@ public class Application {
         public void run(String... args) throws Exception {
             PingerArgs config = CommandLine.populateCommand(new PingerArgs(), args);
 
+            if (config.account == null) {
+                config.account = settings.getAccount();
+            }
+
+            if (config.authToken == null) {
+                config.authToken = settings.getAuthToken();
+            }
+
             if (config.interval == null) {
                 config.interval = settings.getCheckInterval();
             }
@@ -57,10 +61,16 @@ public class Application {
                 config.threshold = settings.getCheckThreshold();
             }
 
-            Pinger pinger = new PingerBuilder(new URI(config.url), config.phone)
-                    .withInterval(Duration.ofMinutes(config.interval))
+            TwilioPinger pinger = TwilioPinger.newBuilder(config.account, config.authToken)
+                    .withUrl(config.url)
+                    .withPhoneNumber(config.phone)
+                    .withInterval(config.interval)
                     .withThreshold(config.threshold)
                     .build();
+
+            pinger.run();
+
+            Thread.currentThread().join();
         }
     }
 }

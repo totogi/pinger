@@ -3,24 +3,57 @@ package pinger.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.time.Duration;
-
-public class TwilioPinger implements Pinger {
+public class TwilioPinger implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(TwilioPinger.class);
 
-    private final URI url;
-    private final String phoneNumber;
-    private final Duration checkInterval;
-    private final Integer errorCount;
+    public static TwilioPingerBuilder newBuilder(String account, String authToken) {
+        return new TwilioPingerBuilder(account, authToken);
+    }
 
-    public TwilioPinger(URI url,
-                        String phoneNumber,
-                        Duration checkInterval,
-                        Integer errorCount) {
-        this.url = url;
-        this.phoneNumber = phoneNumber;
-        this.checkInterval = checkInterval;
-        this.errorCount = errorCount;
+    private TwilioPinger() {
+
+    }
+
+    @Override
+    public void run() {
+
+    }
+
+    public static class TwilioPingerBuilder {
+        private String account;
+        private String authToken;
+        private String url;
+        private String phoneNumber;
+        private Long interval;
+        private Integer threshold;
+
+        public TwilioPingerBuilder(String account, String authToken) {
+            this.account = account;
+            this.authToken = authToken;
+        }
+
+        public TwilioPingerBuilder withUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public TwilioPingerBuilder withPhoneNumber(String phoneNumer) {
+            this.phoneNumber = phoneNumer;
+            return this;
+        }
+
+        public TwilioPingerBuilder withInterval(Long interval) {
+            this.interval = interval;
+            return this;
+        }
+
+        public TwilioPingerBuilder withThreshold(Integer threshold) {
+            this.threshold = threshold;
+            return this;
+        }
+
+        public TwilioPinger build() {
+            return new TwilioPinger();
+        }
     }
 }
