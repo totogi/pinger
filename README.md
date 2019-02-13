@@ -2,6 +2,18 @@
 
 Simple utility that pings a url and sends a text message if it does not receive an `HTTP 200 OK` response.
 
+## Prerequisites
+TODO
+
+## Building
+TODO
+
+## Running
+TODO
+
+## Bugs and Feedback
+For bugs, questions, and discussions please use the [Github Issues](https://github.com/gregwhitaker/pinger/issues).
+
 ## License
 MIT License
 
