@@ -1,6 +1,6 @@
 # pinger
 
-Simple utility that pings a url and sends a text message if it does not receive an HTTP 200 OK response.
+Simple utility that pings a url and sends a text message if it does not receive an `HTTP 200 OK` response.
 
 ## License
 MIT License
