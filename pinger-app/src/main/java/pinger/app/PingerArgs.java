@@ -4,7 +4,13 @@ import static picocli.CommandLine.*;
 
 public class PingerArgs {
 
-    @Option(names = { "--url" }, required = true, description = "Url to check")
+    @Option(names = { "--account" }, required = true, description = "Twilio Account Id")
+    public String accountSid;
+
+    @Option(names = { "--authToken" }, required = true, description = "Twilio Auth Token")
+    public String authToken;
+
+    @Option(names = { "--url" }, required = true, description = "Url to ping")
     public String url;
 
     @Option(names = { "--phone" }, required = true, description = "Phone number to alert")
