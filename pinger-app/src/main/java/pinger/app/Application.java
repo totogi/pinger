@@ -47,12 +47,16 @@ public class Application {
 
             // Twilio Account Id
             if (config.account == null) {
-                config.account = settings.getAccount();
+                config.account = settings.getTwilioAccount();
             }
 
             // Twilio Auth Token
             if (config.authToken == null) {
-                config.authToken = settings.getAuthToken();
+                config.authToken = settings.getTwilioAuthToken();
+            }
+
+            if (config.fromPhone == null) {
+                config.fromPhone = settings.getTwilioPhoneNumber();
             }
 
             // Interval Between Checks (minutes)
@@ -65,9 +69,9 @@ public class Application {
                 config.threshold = settings.getCheckThreshold();
             }
 
-            TwilioPinger pinger = TwilioPinger.newBuilder(config.account, config.authToken)
+            TwilioPinger pinger = TwilioPinger.newBuilder(config.account, config.authToken, config.fromPhone)
                     .withUrl(config.url)
-                    .withPhoneNumber(config.phone)
+                    .withPhoneNumber(config.toPhone)
                     .withInterval(config.interval)
                     .withThreshold(config.threshold)
                     .build();

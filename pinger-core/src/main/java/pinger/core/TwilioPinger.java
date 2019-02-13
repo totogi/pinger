@@ -1,8 +1,15 @@
 package pinger.core;
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,31 +23,35 @@ public final class TwilioPinger implements Runnable {
 
     /**
      *
-     * @param account
-     * @param authToken
+     * @param twilioAccount
+     * @param twilioAuthToken
+     * @param twilioPhoneNumber
      * @return
      */
-    public static Builder newBuilder(String account, String authToken) {
-        return new Builder(account, authToken);
+    public static Builder newBuilder(String twilioAccount, String twilioAuthToken, String twilioPhoneNumber) {
+        return new Builder(twilioAccount, twilioAuthToken, new PhoneNumber(twilioPhoneNumber));
     }
 
-    private final String account;
-    private final String authToken;
+    private final String twilioAccount;
+    private final String twilioAuthToken;
+    private final PhoneNumber twilioPhoneNumber;
     private final String url;
-    private final String phoneNumber;
+    private final PhoneNumber phoneNumber;
     private final Duration interval;
     private final Integer threshold;
 
     private final AtomicInteger errorCnt = new AtomicInteger(0);
 
-    private TwilioPinger(final String account,
-                         final String authToken,
+    private TwilioPinger(final String twilioAccount,
+                         final String twilioAuthToken,
+                         final PhoneNumber twilioPhoneNumber,
                          final String url,
-                         final String phoneNumber,
+                         final PhoneNumber phoneNumber,
                          final Duration interval,
                          final Integer threshold) {
-        this.account = account;
-        this.authToken = authToken;
+        this.twilioAccount = twilioAccount;
+        this.twilioAuthToken = twilioAuthToken;
+        this.twilioPhoneNumber = twilioPhoneNumber;
         this.url = url;
         this.phoneNumber = phoneNumber;
         this.interval = interval;
@@ -51,8 +62,10 @@ public final class TwilioPinger implements Runnable {
     public void run() {
         LOG.info("Starting to monitor URL: {}", url);
 
+        Twilio.init(twilioAccount, twilioAuthToken);
+
         Timer timer = new Timer();
-        timer.schedule(new PingTask(url, errorCnt), interval.getSeconds());
+        timer.schedule(new PingTask(url, errorCnt, twilioPhoneNumber, phoneNumber), interval.getSeconds());
     }
 
     /**
@@ -63,15 +76,45 @@ public final class TwilioPinger implements Runnable {
 
         private final String url;
         private final AtomicInteger errorCnt;
+        private final PhoneNumber twilioPhoneNumber;
+        private final PhoneNumber phoneNumber;
 
-        public PingTask(String url, AtomicInteger errorCnt) {
+        public PingTask(String url,
+                        AtomicInteger errorCnt,
+                        PhoneNumber twilioPhoneNumber,
+                        PhoneNumber phoneNumber) {
             this.url = url;
             this.errorCnt = errorCnt;
+            this.twilioPhoneNumber = twilioPhoneNumber;
+            this.phoneNumber = phoneNumber;
         }
 
         @Override
         public void run() {
-            
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    LOG.info("FAILURE: {}", url);
+
+                    if (errorCnt.incrementAndGet() >= 3) {
+                        sendAlert();
+                        errorCnt.set(0);
+                    }
+                } else {
+                    LOG.info("SUCCESS: {}", url);
+                }
+            } catch (IOException e) {
+                LOG.error("Exception occurred while sending http ping", e);
+            }
+        }
+
+        private void sendAlert() {
+            Message.creator(phoneNumber, twilioPhoneNumber, String.format("Pinger - FAILURE: %s", url))
+                    .create();
         }
     }
 
@@ -79,8 +122,9 @@ public final class TwilioPinger implements Runnable {
      * Builds new instances of {@link TwilioPinger}
      */
     public static class Builder {
-        private final String account;
-        private final String authToken;
+        private final String twilioAccount;
+        private final String twilioAuthToken;
+        private final PhoneNumber twilioPhoneNumber;
         private String url;
         private String phoneNumber;
         private Long interval;
@@ -89,12 +133,16 @@ public final class TwilioPinger implements Runnable {
         /**
          * Creates a new TwilioPinger builder.
          *
-         * @param account twilio account sid
-         * @param authToken twilio auth token
+         * @param twilioAccount twilio twilioAccount sid
+         * @param twilioAuthToken twilio auth token
+         * @param twilioPhoneNumber twilio phone number
          */
-        public Builder(final String account, final String authToken) {
-            this.account = account;
-            this.authToken = authToken;
+        public Builder(final String twilioAccount,
+                       final String twilioAuthToken,
+                       PhoneNumber twilioPhoneNumber) {
+            this.twilioAccount = twilioAccount;
+            this.twilioAuthToken = twilioAuthToken;
+            this.twilioPhoneNumber = twilioPhoneNumber;
         }
 
         /**
@@ -147,7 +195,13 @@ public final class TwilioPinger implements Runnable {
          * @return a configured {@link TwilioPinger}
          */
         public TwilioPinger build() {
-            return new TwilioPinger(account, authToken, url, phoneNumber, Duration.ofMinutes(interval), threshold);
+            return new TwilioPinger(twilioAccount,
+                    twilioAuthToken,
+                    twilioPhoneNumber,
+                    url,
+                    new PhoneNumber(phoneNumber),
+                    Duration.ofMinutes(interval),
+                    threshold);
         }
     }
 }

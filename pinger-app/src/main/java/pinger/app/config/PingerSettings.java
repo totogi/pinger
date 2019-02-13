@@ -7,25 +7,34 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "pinger")
 public class PingerSettings {
 
-    private String account;
-    private String authToken;
+    private String twilioAccount;
+    private String twilioAuthToken;
+    private String twilioPhoneNumber;
     private Long checkInterval;
     private Integer checkThreshold;
 
-    public String getAccount() {
-        return account;
+    public String getTwilioAccount() {
+        return twilioAccount;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setTwilioAccount(String twilioAccount) {
+        this.twilioAccount = twilioAccount;
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public String getTwilioAuthToken() {
+        return twilioAuthToken;
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    public void setTwilioAuthToken(String twilioAuthToken) {
+        this.twilioAuthToken = twilioAuthToken;
+    }
+
+    public String getTwilioPhoneNumber() {
+        return twilioPhoneNumber;
+    }
+
+    public void setTwilioPhoneNumber(String twilioPhoneNumber) {
+        this.twilioPhoneNumber = twilioPhoneNumber;
     }
 
     public Long getCheckInterval() {

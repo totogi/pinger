@@ -10,11 +10,14 @@ public class PingerArgs {
     @Option(names = { "--authToken" }, required = true, description = "Twilio Auth Token")
     public String authToken;
 
+    @Option(names = { "--fromPhone" }, required = true, description = "Twilio Phone NUmber")
+    public String fromPhone;
+
     @Option(names = { "--url" }, required = true, description = "Url to ping")
     public String url;
 
-    @Option(names = { "--phone" }, required = true, description = "Phone number to alert")
-    public String phone;
+    @Option(names = { "--toPhone" }, required = true, description = "Phone number to alert")
+    public String toPhone;
 
     @Option(names = { "--interval" }, description = "Number of minutes to wait between checks")
     public Long interval;
