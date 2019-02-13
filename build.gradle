@@ -1,0 +1,21 @@
+plugins {
+    id 'com.gradle.build-scan' version '2.1'
+    id 'idea'
+    id 'net.saliman.properties' version '1.4.6'
+}
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+    publishOnFailure()
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'net.saliman.properties'
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}

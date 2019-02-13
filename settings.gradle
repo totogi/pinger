@@ -1,0 +1,4 @@
+rootProject.name = 'pinger'
+include 'pinger-core'
+include 'pinger-app'
+
