@@ -8,7 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
+import picocli.CommandLine;
 import pinger.app.config.PingerSettings;
+import pinger.core.Pinger;
+import pinger.core.PingerBuilder;
+
+import java.net.URI;
+import java.time.Duration;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
@@ -41,7 +47,20 @@ public class Application {
 
         @Override
         public void run(String... args) throws Exception {
+            PingerArgs config = CommandLine.populateCommand(new PingerArgs(), args);
 
+            if (config.interval == null) {
+                config.interval = settings.getCheckInterval();
+            }
+
+            if (config.threshold == null) {
+                config.threshold = settings.getCheckThreshold();
+            }
+
+            Pinger pinger = new PingerBuilder(new URI(config.url), config.phone)
+                    .withInterval(Duration.ofMinutes(config.interval))
+                    .withThreshold(config.threshold)
+                    .build();
         }
     }
 }

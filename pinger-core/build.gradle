@@ -6,6 +6,6 @@ sourceCompatibility = 1.8
 
 dependencies {
 
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.5'
+    compile 'com.googlecode.libphonenumber:libphonenumber:8.10.5'
     implementation 'org.slf4j:slf4j-api:1.7.25'
 }

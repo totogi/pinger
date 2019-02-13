@@ -13,21 +13,21 @@ public class PingerBuilder {
 
     private URI url;
     private String phoneNumber;
-    private Duration duration = Duration.ofMinutes(1);
-    private Integer errorCount = 3;
+    private Duration interval = Duration.ofMinutes(1);
+    private Integer threshold = 3;
 
     public PingerBuilder(URI url, String phoneNumber) throws NumberParseException {
         this.url = url;
         this.phoneNumber = normalizePhoneNumber(phoneNumber);
     }
 
-    public PingerBuilder withInterval(Duration duration) {
-        this.duration = duration;
+    public PingerBuilder withInterval(Duration interval) {
+        this.interval = interval;
         return this;
     }
 
-    public PingerBuilder withErrorCountBeforeAlert(Integer errorCount) {
-        this.errorCount = errorCount;
+    public PingerBuilder withThreshold(Integer threshold) {
+        this.threshold = threshold;
         return this;
     }
 
