@@ -1,5 +1,6 @@
 package pinger.core;
 
+import com.twilio.Twilio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,9 @@ public final class TwilioPinger implements Runnable {
         LOG.info("Monitoring Url: {}", url);
     }
 
+    /**
+     * Builds new instances of {@link TwilioPinger}
+     */
     public static class Builder {
         private final String account;
         private final String authToken;
@@ -55,31 +59,66 @@ public final class TwilioPinger implements Runnable {
         private Long interval;
         private Integer threshold;
 
+        /**
+         * Creates a new TwilioPinger builder.
+         *
+         * @param account twilio account sid
+         * @param authToken twilio auth token
+         */
         public Builder(final String account, final String authToken) {
             this.account = account;
             this.authToken = authToken;
         }
 
+        /**
+         * Sets the url to monitor on the builder.
+         *
+         * @param url url to monitor
+         * @return this builder
+         */
         public Builder withUrl(final String url) {
             this.url = url;
             return this;
         }
 
+        /**
+         * Sets the phone number to alert in the event of an outage on the builder.
+         *
+         * @param phoneNumer phone number to alert
+         * @return this builder
+         */
         public Builder withPhoneNumber(final String phoneNumer) {
             this.phoneNumber = phoneNumer;
             return this;
         }
 
+        /**
+         * Sets the interval, in minutes, between health checks on the builder.
+         *
+         * @param interval interval between health checks in minutes
+         * @return this builder
+         */
         public Builder withInterval(final Long interval) {
             this.interval = interval;
             return this;
         }
 
+        /**
+         * Sets the number of error health checks to encounter before sending alert on the builder.
+         *
+         * @param threshold number of error health checks before alert
+         * @return this builder
+         */
         public Builder withThreshold(final Integer threshold) {
             this.threshold = threshold;
             return this;
         }
 
+        /**
+         * Builds a new {@link TwilioPinger} instance.
+         *
+         * @return a configured {@link TwilioPinger}
+         */
         public TwilioPinger build() {
             return new TwilioPinger(account, authToken, url, phoneNumber, Duration.ofMinutes(interval), threshold);
         }
