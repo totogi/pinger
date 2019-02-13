@@ -28,7 +28,7 @@ public class Application {
     }
 
     /**
-     *
+     * Runs the pinger.
      */
     @Component
     public class ApplicationRunner implements CommandLineRunner {
@@ -45,18 +45,22 @@ public class Application {
         public void run(String... args) throws Exception {
             PingerArgs config = CommandLine.populateCommand(new PingerArgs(), args);
 
+            // Twilio Account Id
             if (config.account == null) {
                 config.account = settings.getAccount();
             }
 
+            // Twilio Auth Token
             if (config.authToken == null) {
                 config.authToken = settings.getAuthToken();
             }
 
+            // Interval Between Checks (minutes)
             if (config.interval == null) {
                 config.interval = settings.getCheckInterval();
             }
 
+            // Number of Errors Encountered Before Alert Sent
             if (config.threshold == null) {
                 config.threshold = settings.getCheckThreshold();
             }
