@@ -1,10 +1,12 @@
 package pinger.core;
 
-import com.twilio.Twilio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -29,6 +31,8 @@ public final class TwilioPinger implements Runnable {
     private final Duration interval;
     private final Integer threshold;
 
+    private final AtomicInteger errorCnt = new AtomicInteger(0);
+
     private TwilioPinger(final String account,
                          final String authToken,
                          final String url,
@@ -45,7 +49,30 @@ public final class TwilioPinger implements Runnable {
 
     @Override
     public void run() {
-        LOG.info("Monitoring Url: {}", url);
+        LOG.info("Starting to monitor URL: {}", url);
+
+        Timer timer = new Timer();
+        timer.schedule(new PingTask(url, errorCnt), interval.getSeconds());
+    }
+
+    /**
+     *
+     */
+    static class PingTask extends TimerTask {
+        private static final Logger LOG = LoggerFactory.getLogger(PingTask.class);
+
+        private final String url;
+        private final AtomicInteger errorCnt;
+
+        public PingTask(String url, AtomicInteger errorCnt) {
+            this.url = url;
+            this.errorCnt = errorCnt;
+        }
+
+        @Override
+        public void run() {
+            
+        }
     }
 
     /**
