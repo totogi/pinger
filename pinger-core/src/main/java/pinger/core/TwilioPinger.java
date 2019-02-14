@@ -65,7 +65,13 @@ public final class TwilioPinger implements Runnable {
         Twilio.init(twilioAccount, twilioAuthToken);
 
         Timer timer = new Timer();
-        timer.schedule(new PingTask(url, errorCnt, twilioPhoneNumber, phoneNumber), interval.getSeconds());
+        timer.schedule(new PingTask(url, errorCnt, twilioPhoneNumber, phoneNumber), 0, interval.getSeconds() * 1000L);
+
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            // Noop
+        }
     }
 
     /**
@@ -106,9 +112,14 @@ public final class TwilioPinger implements Runnable {
                     }
                 } else {
                     LOG.info("SUCCESS: {}", url);
+                    errorCnt.set(0);
                 }
             } catch (IOException e) {
                 LOG.error("Exception occurred while sending http ping", e);
+                if (errorCnt.incrementAndGet() >= 3) {
+                    sendAlert();
+                    errorCnt.set(0);
+                }
             }
         }
 

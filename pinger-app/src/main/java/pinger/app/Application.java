@@ -77,8 +77,6 @@ public class Application {
                     .build();
 
             pinger.run();
-
-            Thread.currentThread().join();
         }
     }
 }
