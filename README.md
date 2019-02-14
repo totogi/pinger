@@ -3,13 +3,32 @@
 Simple utility that pings a url and sends a text message if it does not receive an `HTTP 200 OK` response.
 
 ## Prerequisites
-TODO
+This utility requires that you have a [Twilio](https://www.twilio.com/) account with a Twilio phone number configured.
 
 ## Building
-TODO
+Run the following command to build the application:
+
+    ./gradlew clean build
 
 ## Running
-TODO
+Run `pinger-app` application as an executable jar using the following command:
+
+    java -jar pinger-app-0.1.0.jar /
+    --account=[Twilio Account Sid] /
+    --authToken=[Twilio Auth Token] /
+    --fromPhone=[Twilio Phone Number] /
+    --url=[Url to ping] /
+    --toPhone=[Phone number to text]
+    
+    
+Example:
+
+    java -jar pinger-app-0.1.0.jar /
+    --account=ACf5568dfe6106867907898010f1d14669 /
+    --authToken=2cefe659e93405d11223398a548e42db6 /
+    --fromPhone=+18459240611 /
+    --url=https://www.netifi.com /
+    --toPhone=+18459960345
 
 ## Bugs and Feedback
 For bugs, questions, and discussions please use the [Github Issues](https://github.com/gregwhitaker/pinger/issues).
