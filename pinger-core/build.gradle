@@ -8,6 +8,6 @@ dependencies {
     compile 'com.googlecode.libphonenumber:libphonenumber:8.10.5'
 
     implementation 'com.squareup.okhttp3:okhttp:3.13.1'
-    implementation 'com.twilio.sdk:twilio:7.35.0'
+    implementation 'com.whoosh.sdk:whoosh:0.1.0'
     implementation 'org.slf4j:slf4j-api:1.7.25'
 }

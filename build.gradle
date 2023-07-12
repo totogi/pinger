@@ -17,5 +17,8 @@ subprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            url '/workspace/m2-repository'
+        }
     }
 }
