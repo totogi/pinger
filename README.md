@@ -36,7 +36,7 @@ Example with env variables:
     --account=$ACCOUNT_SID \
     --authToken=$AUTH_TOKEN \
     --fromPhone=+18555371834 \
-    --url=https://gouplf76nc.execute-api.us-east-1.amazonaws.com/random_ping \
+    --url=https://whoosh-ping.totogidemos.com/random_ping \
     --toPhone=+18459960345 \
     --interval=5 \
     --threshold=1
