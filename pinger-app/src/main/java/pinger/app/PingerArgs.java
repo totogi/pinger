@@ -19,7 +19,7 @@ public class PingerArgs {
     @Option(names = { "--toPhone" }, required = true, description = "Phone number to alert")
     public String toPhone;
 
-    @Option(names = { "--interval" }, description = "Number of minutes to wait between checks")
+    @Option(names = { "--interval" }, description = "Number of seconds to wait between checks")
     public Long interval;
 
     @Option(names = { "--threshold" }, description = "Maximum number of errors to encounter before alerting")

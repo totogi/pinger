@@ -211,7 +211,7 @@ public final class TwilioPinger implements Runnable {
                     twilioPhoneNumber,
                     url,
                     new PhoneNumber(phoneNumber),
-                    Duration.ofMinutes(interval),
+                    Duration.ofSeconds(interval),
                     threshold);
         }
     }

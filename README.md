@@ -32,13 +32,14 @@ Example:
 
 Example with env variables:
 
-    java -jar pinger-app-0.1.0.jar /
-    --account=$ACCOUNT_SID /
-    --authToken=$AUTH_TOKEN /
-    --fromPhone=+18555371834 /
-    --url=https://www.netifi.com /
-    --toPhone=+18459960345
-    --interval=0.5
+    java -jar pinger-app/build/libs/pinger-app-0.1.0.jar \
+    --account=$ACCOUNT_SID \
+    --authToken=$AUTH_TOKEN \
+    --fromPhone=+18555371834 \
+    --url=https://gouplf76nc.execute-api.us-east-1.amazonaws.com/random_ping \
+    --toPhone=+18459960345 \
+    --interval=5 \
+    --threshold=1
 
 ## Bugs and Feedback
 For bugs, questions, and discussions please use the [Github Issues](https://github.com/gregwhitaker/pinger/issues).
